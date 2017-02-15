@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<logger name="com" level="ERROR" />
+	<logger name="org" level="ERROR" />
+	<logger name="org.kurento" level="WARN" />
+	<logger name="es.urjc" level="INFO" />
+</configuration>

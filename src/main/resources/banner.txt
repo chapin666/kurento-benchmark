@@ -1,0 +1,24 @@
+                            `::                                                  
+                           :yy.                                                 
+                     .::.  -/:.  -/:`                                           
+                    -hhhh-/hhhy.+hhhy`                ommd`                     
+                    `+ss+`.oys+ .oys/                 sMMN`                     
+                       :::::::::::-                   sMMN`                     
+                       /++++++++++:                   sMMN`                     
+     `.:+ooo+/-`        `.-://:-.`           `.:+ooo+:yMMN`      `.:+ooo/-`     
+   `+dNMMNNNMMMh     `:ymNMMMMMMNds-       `+dNMMNmmNNMMMN`    `+dNMNNmNMMms.   
+  .dMMNy/---:/sy    -dMMNy+:::/odNMNy`    -dMMmo:....-hMMN`   `hMMm+-...:yMMm-  
+ `dMMm-            -NMMy.        :mMMd`  `mMMd.       sMMN`   yMMm-```````yMMd  
+ -MMM+             yMMN`          /MMM/  /MMM/        sMMN`  `NMMNddddddddmMMN. 
+ -MMM+             hMMm           :MMM/  :MMM:        sMMN`  `NMMh------------  
+ `mMMm-            /MMMo`        .dMMN.  `mMMh`       sMMN`   yMMN:          `  
+  -mMMNy/-...-/o.   +NMMdo:-..-/sNMMd-    -dMMd+--....yMMN`   `yMMNh/--.--:ohd  
+   `odNMMNNNNNMM-    .odMMMNNNNMMNh+`      `+hNMNNNNNNMMMN`     /hNMMNNNNNMMms  
+     `.:+osso+/-       `./+osoo+:.`          `.-//+++++++/        .:+oooo+/-`   
+                                                                                
+                          `-` `-`  ---.    -.   `---`                           
+                          .y/ :y-  ys/y+  `y/  /y/:/+                           
+                          .h/ :h-  yyoh/  `h/  ys   `                           
+                           os+so`  yo /y- `h/  -so+o+                           
+                            ```    `   ` -oo.    ```  
+                                                         version ${project.version}

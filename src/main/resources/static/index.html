@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="img/code.png" type="image/png">
+
+<link rel="stylesheet"
+	href="webjars/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="webjars/ekko-lightbox/dist/ekko-lightbox.min.css">
+<link rel="stylesheet" href="webjars/demo-console/index.css">
+<link rel="stylesheet" href="css/styles.css">
+
+<script src="webjars/jquery/dist/jquery.min.js"></script>
+<script src="webjars/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="webjars/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
+<script src="webjars/adapter.js/adapter.js"></script>
+<script src="webjars/demo-console/index.js"></script>
+
+<script src="js/kurento-utils.js"></script>
+<script src="js/index.js"></script>
+<title>WebRTC Benchmark</title>
+</head>
+
+<body>
+	<header>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target=".navbar-collapse"></button>
+				</div>
+				<div class="collapse navbar-collapse"
+					id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="https://github.com/codeurjd/webrtc-benchmark"><span
+								class="glyphicon glyphicon-file"></span> Source Code</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="page-header">
+			<h1>WebRTC Benchmark</h1>
+			<p>This is a benchmark application aimed to assess the
+				performance of Kurento Media Server. Depending of the configuration,
+				the media logic has different topologies (one-to-one or one-to-many)
+				and different media processing (none, filtering, encoding, etc).</p>
+		</div>
+		<div class="row">
+			<div class="col-xs-5">
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="sessionNumber">Session
+							number</label>
+					</div>
+					<div class="col-xs-4">
+						<input class="form-control" type="text" id="sessionNumber"
+							name="sessionNumber" value="0"></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="processing">Media
+							processing</label>
+					</div>
+					<div class="col-xs-4">
+						<select class="form-control" name="processing" id="processing">
+							<option value="None">None</option>
+							<option value="Encoder">Encoder</option>
+							<option value="FaceOverlayFilter">FaceOverlayFilter</option>
+							<option value="ImageOverlayFilter">ImageOverlayFilter</option>
+							<option value="ZBarFilter">ZBarFilter</option>
+							<option value="PassThrough">PassThrough</option>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="bandwidth">Bandwidth
+							(kbps)</label>
+					</div>
+					<div class="col-xs-4">
+						<input class="form-control" type="text" id="bandwidth"
+							name="bandwidth" value="500"></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="fakeClients">Number of
+							fake clients</label>
+					</div>
+					<div class="col-xs-4">
+						<input class="form-control" type="text" id="fakeClients"
+							name="fakeClients" value="0"></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="timeBetweenClients">Rate
+							between clients (milliseconds)</label>
+					</div>
+					<div class="col-xs-4">
+						<input class="form-control" type="text" id="timeBetweenClients"
+							name="timeBetweenClients" value="1000"></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label">Remove fake clients</label>
+					</div>
+					<div class="col-xs-4">
+						<input type="radio" name="removeFakeClients" value="true"
+							class="checkbox-inline">True <input type="radio"
+							name="removeFakeClients" value="false" class="checkbox-inline"
+							checked="checked">False
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="playTime">Time with all
+							fake clients together (seconds)</label>
+					</div>
+					<div class="col-xs-4">
+						<input class="form-control" type="text" id="playTime"
+							name="playTime" value="10" disabled="disabled"></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-8">
+						<label class="control-label" for="fakeClientsPerInstance">Number
+							of fake clients per KMS instance</label>
+					</div>
+					<div class="col-xs-4">
+						<input class="form-control" type="text"
+							id="fakeClientsPerInstance" name="fakeClientsPerInstance"
+							value="20"></input>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<br> <a id="presenter" href="#"
+							class="btn btn-success btn-responsive"><span
+							class="glyphicon glyphicon-play"></span> Presenter </a> <a
+							id="viewer" href="#" class="btn btn-primary btn-responsive"><span
+							class="glyphicon glyphicon-user"></span> Viewer(s)</a> <a id="stop"
+							href="#" class="btn btn-danger btn-responsive"><span
+							class="glyphicon glyphicon-stop"></span> Stop</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-7">
+				<div id="videoBig">
+					<video id="video" autoplay width="640px" height="480px"
+						poster="img/webrtc.png" class="img-responsive"></video>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="row">
+				<div class="col-xs-12">
+					<label class="control-label" for="console">Console</label><br>
+					<br>
+					<div id="console" class="democonsole">
+						<ul></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer>
+		<div class="foot-fixed-bottom">
+			<div class="container text-center">
+				<hr>
+				<div class="row">&copy; 2017 CodeUrjc</div>
+				<div class="row">
+					<div class="col-xs-12">
+						<a href="http://www.urjc.es"><img src="img/code.png"
+							alt="Universidad Rey Juan Carlos" height="50px"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<div id="resourcesDialog" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Not Enough Resources</h4>
+				</div>
+				<div class="modal-body">
+					<p>At this moment the system is using its 100% of resources.
+						Please, try to start a media session later.</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</body>
+</html>
