@@ -32,6 +32,6 @@ limitations under the License.
 
 
 [Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
-[CodeUrjc Logo]: http://www.code.etsii.urjc.es/img/codeurjc_logo.jpg
+[CodeUrjc Logo]: https://raw.githubusercontent.com/codeurjc/webrtc-benchmark/master/src/main/resources/static/img/code.png
 [CodeUrjc Twitter]: https://twitter.com/codeurjc
 [CodeUrjc]: http://www.code.etsii.urjc.es/
