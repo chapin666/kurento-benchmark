@@ -80,7 +80,6 @@ public class UserSession {
 	private Map<String, List<MediaElement>> mediaElementsInFakeMediaPipelineMap = new ConcurrentSkipListMap<>();
 	private List<MediaElement> mediaElementsInExtraMediaPipelineList = new ArrayList<>();
 	private Queue<String> fakeKmsUriQueue;
-	private Thread latencyThread;
 	private int bandwidth;
 
 	public UserSession(WebSocketSession wsSession, String sessionNumber,
@@ -474,13 +473,6 @@ public class UserSession {
 	public void releaseViewer() {
 		log.info("[Session number {} - WS session {}] Releasing viewer",
 				sessionNumber, wsSession.getId());
-
-		if (latencyThread != null) {
-			log.debug(
-					"[Session number {} - WS session {}] Releasing latencies thread",
-					sessionNumber, wsSession.getId());
-			latencyThread.interrupt();
-		}
 
 		if (filter != null) {
 			log.debug("[Session number {} - WS session {}] Releasing filter",
