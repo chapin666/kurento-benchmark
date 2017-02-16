@@ -40,6 +40,8 @@ import org.kurento.test.browser.WebPage;
 import org.kurento.test.config.BrowserConfig;
 import org.kurento.test.config.BrowserScope;
 import org.kurento.test.config.TestScenario;
+import org.kurento.test.services.Service;
+import org.kurento.test.services.WebServerService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -57,6 +59,10 @@ import com.google.common.collect.Table;
  * @since 6.6.1
  */
 public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
+
+	@Service
+	public static WebServerService webServer = new WebServerService(
+			BenchmarkApp.class);
 
 	private final Logger log = LoggerFactory
 			.getLogger(WebRtcBenchmarkTest.class);
