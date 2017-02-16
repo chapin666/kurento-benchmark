@@ -40,6 +40,7 @@ import org.kurento.test.browser.WebPage;
 import org.kurento.test.config.BrowserConfig;
 import org.kurento.test.config.BrowserScope;
 import org.kurento.test.config.TestScenario;
+import org.kurento.test.monitor.SystemMonitorManager;
 import org.kurento.test.services.Service;
 import org.kurento.test.services.WebServerService;
 import org.openqa.selenium.By;
@@ -67,62 +68,70 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 	private final Logger log = LoggerFactory
 			.getLogger(WebRtcBenchmarkTest.class);
 
-	public static final String APP_URL_PROP = "app.url";
-	public static final String APP_URL_DEFAULT = "https://localhost:8443/";
-	public static final String FAKE_CLIENTS_NUMBER_PROP = "fake.clients.number";
-	public static final int FAKE_CLIENTS_NUMBER_DEFAULT = 0;
-	public static final String FAKE_CLIENTS_RATE_PROP = "fake.clients.rate";
-	public static final int FAKE_CLIENTS_RATE_DEFAULT = 1000;
-	public static final String FAKE_CLIENTS_PER_KMS_PROP = "fake.clients.number.per.kms";
-	public static final int FAKE_CLIENTS_PER_KMS_DEFAULT = 75;
+	private static final String APP_URL_PROP = "app.url";
+	private static final String APP_URL_DEFAULT = "https://localhost:8443/";
+	private static final String FAKE_CLIENTS_NUMBER_PROP = "fake.clients.number";
+	private static final int FAKE_CLIENTS_NUMBER_DEFAULT = 0;
+	private static final String FAKE_CLIENTS_RATE_PROP = "fake.clients.rate";
+	private static final int FAKE_CLIENTS_RATE_DEFAULT = 1000;
+	private static final String FAKE_CLIENTS_PER_KMS_PROP = "fake.clients.number.per.kms";
+	private static final int FAKE_CLIENTS_PER_KMS_DEFAULT = 75;
 
-	public static final String SESSION_PLAYTIME_PROP = "session.play.time";
-	public static final int SESSION_PLAYTIME_DEFAULT = 5;
-	public static final String SESSION_RATE_PROP = "session.rate.time";
-	public static final int SESSION_RATE_DEFAULT = 1000;
-	public static final String SESSIONS_NUMBER_PROP = "sessions.number";
-	public static final int SESSIONS_NUMBER_DEFAULT = 1;
-	public static final String INIT_SESSION_NUMBER_PROP = "init.session.number";
-	public static final int INIT_SESSION_NUMBER_DEFAULT = 0;
-	public static final String MEDIA_PROCESSING_PROP = "processing";
-	public static final String MEDIA_PROCESSING_DEFAULT = "None";
-	public static final String FAKE_CLIENTS_REMOVE_PROP = "fake.clients.remove";
-	public static final boolean FAKE_CLIENTS_REMOVE_DEFAULT = false;
-	public static final String FAKE_CLIENTS_TOGETHER_TIME_PROP = "fake.clients.play.time";
-	public static final int FAKE_CLIENTS_TOGETHER_TIME_DEFAULT = FAKE_CLIENTS_NUMBER_DEFAULT
+	private static final String SESSION_PLAYTIME_PROP = "session.play.time";
+	private static final int SESSION_PLAYTIME_DEFAULT = 30;
+	private static final String SESSION_RATE_PROP = "session.rate.time";
+	private static final int SESSION_RATE_DEFAULT = 1000;
+	private static final String SESSIONS_NUMBER_PROP = "sessions.number";
+	private static final int SESSIONS_NUMBER_DEFAULT = 1;
+	private static final String INIT_SESSION_NUMBER_PROP = "init.session.number";
+	private static final int INIT_SESSION_NUMBER_DEFAULT = 0;
+	private static final String MEDIA_PROCESSING_PROP = "processing";
+	private static final String MEDIA_PROCESSING_DEFAULT = "None";
+	private static final String FAKE_CLIENTS_REMOVE_PROP = "fake.clients.remove";
+	private static final boolean FAKE_CLIENTS_REMOVE_DEFAULT = false;
+	private static final String FAKE_CLIENTS_TOGETHER_TIME_PROP = "fake.clients.play.time";
+	private static final int FAKE_CLIENTS_TOGETHER_TIME_DEFAULT = FAKE_CLIENTS_NUMBER_DEFAULT
 			* (FAKE_CLIENTS_RATE_DEFAULT / 1000);
-	public static final String VIDEO_QUALITY_SSIM_PROP = "video.quality.ssim";
-	public static final boolean VIDEO_QUALITY_SSIM_DEFAULT = false;
-	public static final String VIDEO_QUALITY_PSNR_PROP = "video.quality.psnr";
-	public static final boolean VIDEO_QUALITY_PSNR_DEFAULT = false;
-	public static final String OUTPUT_FOLDER_PROP = "output.folder";
-	public static final String OUTPUT_FOLDER_DEFAULT = ".";
-	public static final String SERIALIZE_DATA_PROP = "serialize.data";
-	public static final boolean SERIALIZE_DATA_DEFAULT = false;
-	public static final String BANDWIDTH_PROP = "webrtc.endpoint.kbps";
-	public static final int BANDWIDTH_DEFAULT = 500;
-	public static final String NATIVE_DOWNLOAD_METHOD_PROP = "native.download.method";
-	public static final boolean NATIVE_DOWNLOAD_METHOD_DEFAULT = false;
-	public static final String DOWNLOADS_FOLDER_NAME_PROP = "download.folder.name";
-	public static final String DOWNLOADS_FOLDER_NAME_DEFAULT = "Downloads";
-	public static final String KMS_INTERNAL_LATENCY_PROP = "kms.internal.latency";
-	public static final boolean KMS_INTERNAL_LATENCY_DEFAULT = false;
+	private static final String VIDEO_QUALITY_SSIM_PROP = "video.quality.ssim";
+	private static final boolean VIDEO_QUALITY_SSIM_DEFAULT = false;
+	private static final String VIDEO_QUALITY_PSNR_PROP = "video.quality.psnr";
+	private static final boolean VIDEO_QUALITY_PSNR_DEFAULT = false;
+	private static final String OUTPUT_FOLDER_PROP = "output.folder";
+	private static final String OUTPUT_FOLDER_DEFAULT = ".";
+	private static final String SERIALIZE_DATA_PROP = "serialize.data";
+	private static final boolean SERIALIZE_DATA_DEFAULT = false;
+	private static final String BANDWIDTH_PROP = "webrtc.endpoint.kbps";
+	private static final int BANDWIDTH_DEFAULT = 500;
+	private static final String NATIVE_DOWNLOAD_METHOD_PROP = "native.download.method";
+	private static final boolean NATIVE_DOWNLOAD_METHOD_DEFAULT = false;
+	private static final String DOWNLOADS_FOLDER_NAME_PROP = "download.folder.name";
+	private static final String DOWNLOADS_FOLDER_NAME_DEFAULT = "Downloads";
+	private static final String MONITOR_KMS_PROP = "monitor.kms";
+	private static final boolean MONITOR_KMS_DEFAULT = false;
+	private static final String SAMPLING_RATE_PROP = "sampling.rate";
+	private static final int SAMPLING_RATE_DEFAULT = 100; // milliseconds
 
-	public int index = 0;
-	public Table<Integer, Integer, String> csvTable = null;
-	public int extraTimePerFakeClients = 0;
-	public boolean getSsim = getProperty(VIDEO_QUALITY_SSIM_PROP,
+	private int index = 0;
+	private Table<Integer, Integer, String> csvTable = null;
+	private int extraTimePerFakeClients = 0;
+	private SystemMonitorManager monitor;
+
+	private boolean getSsim = getProperty(VIDEO_QUALITY_SSIM_PROP,
 			VIDEO_QUALITY_SSIM_DEFAULT);
-	public boolean getPsnr = getProperty(VIDEO_QUALITY_PSNR_PROP,
+	private boolean getPsnr = getProperty(VIDEO_QUALITY_PSNR_PROP,
 			VIDEO_QUALITY_PSNR_DEFAULT);
-	public String outputFolder = getProperty(OUTPUT_FOLDER_PROP,
+	private String outputFolder = getProperty(OUTPUT_FOLDER_PROP,
 			OUTPUT_FOLDER_DEFAULT);
-	public boolean serializeData = getProperty(SERIALIZE_DATA_PROP,
+	private boolean serializeData = getProperty(SERIALIZE_DATA_PROP,
 			SERIALIZE_DATA_DEFAULT);
-	public boolean nativeDownload = getProperty(NATIVE_DOWNLOAD_METHOD_PROP,
+	private boolean nativeDownload = getProperty(NATIVE_DOWNLOAD_METHOD_PROP,
 			NATIVE_DOWNLOAD_METHOD_DEFAULT);
-	public String downloadsFolderName = getProperty(DOWNLOADS_FOLDER_NAME_PROP,
+	private String downloadsFolderName = getProperty(DOWNLOADS_FOLDER_NAME_PROP,
 			DOWNLOADS_FOLDER_NAME_DEFAULT);
+	private boolean monitorKms = getProperty(MONITOR_KMS_PROP,
+			MONITOR_KMS_DEFAULT);
+	private int samplingRate = getProperty(SAMPLING_RATE_PROP,
+			SAMPLING_RATE_DEFAULT);
 
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data() {
@@ -270,7 +279,7 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 		executor.shutdown();
 	}
 
-	public void exercise(int sessionsNumber, int sessionPlayTime,
+	private void exercise(int sessionsNumber, int sessionPlayTime,
 			int sessionRateTime) throws Exception {
 		log.info("[Session {}] Starting test", index);
 
@@ -299,6 +308,13 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 		log.info(
 				"[Session {}] Media in presenter and viewer, starting OCR and recording",
 				index);
+
+		// KMS Monitor (CPU, memory, etc)
+		if (monitorKms) {
+			monitor = new SystemMonitorManager();
+			monitor.setSamplingTime(samplingRate);
+			monitor.startMonitoring();
+		}
 
 		// Start OCR
 		getPresenter(index).startOcr();
@@ -395,6 +411,14 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 		log.info("[Session {}] Close browsers", index);
 		getPresenter(index).close();
 		getViewer(index).close();
+
+		// Stop monitor
+		if (monitorKms) {
+			monitor.stop();
+			monitor.writeResults(outputFolder + this.getClass().getSimpleName()
+					+ "-monitor.csv");
+			monitor.destroy();
+		}
 
 		// Get E2E latency and statistics
 		log.info("[Session {}] Calculating latency and collecting stats",
