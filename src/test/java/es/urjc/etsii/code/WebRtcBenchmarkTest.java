@@ -416,7 +416,7 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 		if (monitorKms) {
 			monitor.stop();
 			monitor.writeResults(outputFolder + this.getClass().getSimpleName()
-					+ "-monitor.csv");
+					+ "-monitor-session" + index + ".csv");
 			monitor.destroy();
 		}
 
@@ -448,8 +448,8 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 	public void writeCsv() throws IOException {
 		if (csvTable != null) {
 			String outputCsvFile = outputFolder
-					+ this.getClass().getSimpleName() + "-session" + index
-					+ ".csv";
+					+ this.getClass().getSimpleName() + "-latency-session"
+					+ index + ".csv";
 			writeCSV(outputCsvFile, csvTable);
 		}
 
