@@ -108,7 +108,7 @@ public class WebRtcBenchmarkTest extends BrowserTest<WebPage> {
 	private static final String DOWNLOADS_FOLDER_NAME_DEFAULT = "Downloads";
 	private static final String MONITOR_KMS_PROP = "monitor.kms";
 	private static final boolean MONITOR_KMS_DEFAULT = false;
-	private static final String SAMPLING_RATE_PROP = "sampling.rate";
+	private static final String SAMPLING_RATE_PROP = "monitor.sampling.rate";
 	private static final int SAMPLING_RATE_DEFAULT = 100; // milliseconds
 
 	private int index = 0;
