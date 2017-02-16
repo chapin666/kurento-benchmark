@@ -3,6 +3,8 @@
 	<include resource="org/springframework/boot/logging/logback/base.xml" />
 	<logger name="com" level="ERROR" />
 	<logger name="org" level="ERROR" />
-	<logger name="org.kurento" level="WARN" />
+	<logger name="net" level="ERROR" />
+	<logger name="ch" level="ERROR" />
+	<logger name="org.kurento" level="DEBUG" />
 	<logger name="es.urjc" level="INFO" />
 </configuration>
