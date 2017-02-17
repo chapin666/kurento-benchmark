@@ -81,6 +81,8 @@ sudo apt-get install -f
 
 ```bash
 sudo apt-get install tesseract-ocr
+sudo mkdir -p /bytedeco/javacpp-presets/tesseract/cppbuild/linux-x86_64/share/tessdata/
+sudo ln -s /usr/share/tesseract-ocr/tessdata/eng.traineddata /bytedeco/javacpp-presets/tesseract/cppbuild/linux-x86_64/share/tessdata/eng.traineddata
 ```
 
 - [qpsnr]. Utility to calculate video quality (SSIM/PSNR). This tool is mandatory to carry out the video quality evaluation (i.e., if the flag video.quality.ssim or video.quality.psnr are set to true). In order to install it in Ubuntu, the latest version of the deb package should be downloaded from the qpsnr web, and the install it with the Debian package manager:
