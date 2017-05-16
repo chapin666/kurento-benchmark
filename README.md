@@ -1,22 +1,19 @@
-[![][CodeUrjc Logo]][CodeUrjc]
 
-Copyright © 2017 [CodeUrjc]. Licensed under [Apache 2.0 License].
-
-webrtc-benchmark
+kurento基准测试
 ================
 
-This is a benchmark application aimed to assess the performance of Kurento Media Server. Depending of the configuration, the media logic has different topologies (one-to-one or one-to-many) with different media processing (none, filtering, encoding, etc).
+这是一个评估 Kurento Media Server 性能的基准应用程序。 根据配置，媒体逻辑具有不同的拓扑（一对一或一对多），具有不同的媒体处理（过滤，编码等）。
 
-Features
+特性
 --------
 
-This repository contains a web application using Spring-Boot and KurentoClient to control an instance of Kurento Media Server (KMS). The application GUI has different configuration parameters to tune its behavior. The features of this application are described in this section.
+该程序是一个使用 Spring-Boot 和 KurentoClient 控制 Kurento Media Server（KMS）实例的Web应用。 应用程序界面具有不同的配置参数来调整其行为。 本节介绍了此应用程序的功能。
 
-First of all, this application is **multi-topology**, meaning that depending on the configuration, the application behaves as a **one2one** or **one2many** WebRTC video call.
+首先, 这个应用程序是**多拓扑**，这意味着可以根据配置，应用程序的行为是一个** one2one **或** one2many ** WebRTC视频通话.
 
-In addition it can ben **multi-session**, meaning that there can be different simultaneous sessions. Each session is identified by the field *Session number* in the GUI.
+其次，它可以是本**多会话**，这意味着可以有不同的同时会话。 每个会话由Web中的字段*Session number*标识。
 
-Then, it can be **multi-processing**. Each WebRtcEndpoint is connected with the other directly, but in between it can be placed a Filter, concretely one the following:
+另外，它可以是**多处理**。 每个WebRtcEndpoint都直接与另一个连接，但在它之间可以放置一个过滤器，具体如下：
 
 	- GStreamerFilter (encoder)
 	- FaceOverlayFilter
@@ -24,55 +21,57 @@ Then, it can be **multi-processing**. Each WebRtcEndpoint is connected with the 
 	- ZBarFilter
 	- PassThrough
 
-The application also supports **fake clients**. It has been designed to be consumed always by two real browsers per session: one acting as presenter and other acting as viewer. This is the case of a one2one video call. In order to convert the session in a one2many, the GUI parameter *Number of fake clients* (in GUI) should be greater that 0. In that case, the application becomes in a one2many, in which N-1 viewers are fake (i.e., they are not browsers consuming the media, but WebRtcEndpoint provided by another instance of KMS). The behavior of the fake clients can be customized from the GUI:
+该应用程序还支持**假客户端**。 它被设计为每个会话总是由两个真正的浏览器消耗：一个作为演示者，另一个作为观众。 这是one2one视频通话的情况。 为了将会话转换为one2many，web 界面参数*Number of fake clients*（在GUI中）的数目应该大于0. 在这种情况下，应用程序将变成一个，其中N-1个查看器是假的（即 ，它们不是消耗媒体的浏览器，而是由KMS的另一个实例提供的WebRtcEndpoint）。 可以从Web界面定制假客户端的行为：
 
-- Rate between clients (milliseconds): Time among a fake viewer and the next one
-- Remove fake clients: Boolean value that indicates whether or not the fake clients should be removed after a given time (next vale)
-- Time with all fake clients together (seconds): If the previous value is true, this field sets the time in which all the fake clients are consuming media. When this time expires, the fake clients are removed using the same shrinking time used for inclusion
-- Number of fake clients per KMS instance. This value is useful to establish when use a new KMS (i.e., create a new KurentoClient) for fake viewers
+- Rate between clients (milliseconds): 当前观众和下一个观众进入房间间隔
+- Remove fake clients: 表示在给定时间之后是否应删除假客户端的布尔值 (下一个参数)
+- Time with all fake clients together (seconds): 如果先前的值为true，则此字段设置所有假客户端正在使用介质的时间。 当此时间到期时，假客户端将被删除
+- Number of fake clients per KMS instance: 每个KMS实例的假客户端数，当使用新的KMS（即创建一个新的KurentoClient）作为假的观众时，该值很有用
 
-All in all, and depending how the GUI is configured, the topology of the application is one of the following:
+总而言之，根据Web界面的配置方式，应用程序的拓扑结构如下所示：
 
-![](https://raw.githubusercontent.com/codeurjc/webrtc-benchmark/master/src/main/resources/static/img/topology.png)
+![](https://s3.cn-north-1.amazonaws.com.cn/lycam-resource/svg/topology.png)
 
-In addition to the application itself, the webrtc-benchmark repository is shipped with an **JUnit test**. This test uses the features provided by the Kurento Testing Framework (*kurento-test* Maven dependency). This test is highly configurable. The following table provides a summary of the configuration parameters:
+除了应用程序本身，webrtc-benchmark库还附带了一个** JUnit test**。 该测试使用Kurento测试框架提供的功能（* kurento-test * Maven依赖）。 此测试是高度可配置的。 下表提供了配置参数的总结:
 
 | Parameter                   | Default Value                | Description                                                                                                                                                                                                             |
 |-----------------------------|------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| kms.ws.uri                  | ws://127.0.0.1:8888/kurento  | KMS (under test) websocket URL                                                                                                                                                                                          |
-| fake.kms.ws.uri             | ws://127.0.0.1:8888/kurento  | KMS (for fake clients) websocket URL. Several instances of KMS can be used for fake clients, simply separating the URLs with the symbol ",", e.g: fake.kms.ws.uri=ws://10.0.0.1:8888/kurento,ws://10.0.0.2:8888/kurento |
-| session.play.time           | 5                            | Session time (in seconds)                                                                                                                                                                                               |
-| session.rate.time           | 1000                         | Input-output rate for sessions (in milliseconds)                                                                                                                                                                        |
-| sessions.number             | 1                            | Number of concurrent sessions                                                                                                                                                                                           |
-| init.session.number         | 0                            | Points for the KMSs for media sessions                                                                                                                                                                                  |
-| processing                  | None                         | Media processing. Valid values: None, Encoder, FaceOverlay, FilterImage, OverlayFilter, ZBarFilter, PassThrough                                                                                                         |
-| fake.clients.number         | 10                           | Number of fake clients                                                                                                                                                                                                  |
-| fake.clients.rate           | 1000                         | Input-output rate for fake clients (in milliseconds)                                                                                                                                                                    |
-| fake.clients.remove         | false                        | Boolean flag that indicates whether or not the fake clients should be removed                                                                                                                                           |
-| fake.clients.play.time      | 10                           | Play time for fake clients (in seconds)                                                                                                                                                                                 |
-| fake.clients.number.per.kms | 20                           | Number of fake clients per KMS                                                                                                                                                                                          |
-| video.quality.ssim          | false                        | Boolean flag that indicates whether or not the SSIM (video quality) analysis is carried out                                                                                                                             |
-| video.quality.psnr          | false                        | Boolean flag that indicates whether or not the PSNR (video quality) analysis is carried out                                                                                                                             |
-| output.folder               | .                            | Folder where the test output (CSV files) is stored. By default it is in the current directory, i.e. the root the project                                                                                                |
-| serialize.data              | false                        | Boolean flag that indicates whether or not the data structures (for end-to-end latency and WebRTC stats) are serialized (stored as *.ser files in the output folder). These files are used for debugging purposes only  |
-| webrtc.endpoint.kbps        | 500                          | Bandwidth (in kbps) to configure the WebRtcEndpoints elements handled by the app                                                                                                                                        |
-| monitor.kms                 | false                        | Boolean flag that indicates whether or not a resources monitor for the machine hosting KMS is used                                                                                                                      |
-| monitor.sampling.rate       | 1000                         | Rate for the monitor in milliseconds                                                                                                                                                                                    |
-| test.node.login             | -                            | If kms.ws.uri points to a KMS hosted in remote machine (i.e. not 127.0.0.1) the test connects to SSH to that host to assess some physical parameters (CPU, memory, etc). In this case, SSH credentials are needed       |
-| test.node.passwd            | -                            | In order to set the KMS SSH credentials, test.node.login and password (or pem key) should be honored. This parameter set the SSH password                                                                               |
-| test.node.pem               | -                            | In order to set the KMS SSH credentials, test.node.login and password (or pem key) should be honored. This parameter set the path of the PEM key file                                                                   |
+| kms.ws.uri                  | ws://127.0.0.1:8888/kurento  | KMS (under test) websocket 地址                                                                                                                                                                                          |
+| fake.kms.ws.uri             | ws://127.0.0.1:8888/kurento  | KMS (for fake clients) websocket URL. 用于假客户端的几个KMS实例，只需将URL与符号分离即可 ",", 例如: fake.kms.ws.uri=ws://10.0.0.1:8888/kurento,ws://10.0.0.2:8888/kurento |
+| session.play.time           | 5                            | 会话时间 (in seconds)                                                                                                                                                                                               |
+| session.rate.time           | 1000                         | 会话的输入输出率(in milliseconds)                                                                                                                                                                        |
+| sessions.number             | 1                            | 并发会话数                                                                                                                                                                                           |
+| init.session.number         | 0                            | session 会话初始数                                                                                                                                                                                |
+| processing                  | None                         | 媒体处理元素. 有效的值为: None, Encoder, FaceOverlay, FilterImage, OverlayFilter, ZBarFilter, PassThrough                                                                                                         |
+| fake.clients.number         | 10                           | 假客户端数量                                                                                                                                                                                                  |
+| fake.clients.rate           | 1000                         | 假客户会话的输入输出率 (in milliseconds)                                                                                                                                                                    |
+| fake.clients.remove         | false                        | 布尔标志，指示是否应删除假客户端的                                                                                                                                          |
+| fake.clients.play.time      | 10                           | 客户端会话时间 (in seconds)                                                                                                                                                                                 |
+| fake.clients.number.per.kms | 20                           | 每个KMS的假客户数量                                                                                                                                                                                          |
+| video.quality.ssim          | false                        | 指示是否执行SSIM（视频质量）分析的布尔标志                                                                                                                             |
+| video.quality.psnr          | false                        | 指示是否执行PSNR（视频质量）分析的布尔标志                                                                                                                             |
+| output.folder               | .                            | 存储测试输出（CSV文件）的文件夹。 默认情况下，它在当前目录中，即项目的根目录                                                                                                |
+| serialize.data              | false                        | 指示数据结构（用于端到端延迟和WebRTC统计信息）是否被序列化（在输出文件夹中存储为* .ser文件）的布尔标志。 这些文件仅用于调试目的  |
+| webrtc.endpoint.kbps        | 500                          | 处理 WebRtcEndpoints 元素的带宽（以kbps为单位）配置                                                                                                                                    |
+| monitor.kms                 | false                        | 指示是否使用KMS机器的资源监视器的布尔标志                                                                                                                     |
+| monitor.sampling.rate       | 1000                         | 监视器的速率（以毫秒为单位）                                                                                                                                                                                   |
+| kms.login             | -                            | 如果kms.ws.uri指向托管在远程机器（即不是127.0.0.1）的KMS，则测试连接到该主机的SSH以评估一些物理参数（CPU，内存等）。 在这种情况下，需要SSH凭据(用户名)       |
+| kms.passwd            | -                            | 为了设置KMS SSH凭据，应该验证密码（或pem密钥）。 此参数设置SSH密码                                                                              |
+| kms.pem               | -                            | 为了设置KMS SSH凭据，应该验证t密码（或pem密钥）。 该参数设置PEM密钥文件的路径                                                                  |
 
-The test can be executed from the command line. To do that, first of all this repository should be cloned from GitHub, and the it can be executed as follows:
+测试可以从命令行执行。 要做到这一点，首先应该从GitHub克隆这个存储库，它可以执行如下：
 
 ```bash
 mvn test -Dparam1=value1 -Dparam2=value ...
 ```
 
-The first action that this test execute is to start the web application (implemented with spring-boot) that internally uses KurentoClient to control the KMS.
+此测试执行的第一个操作是启动Web应用程序（使用spring-boot实现），内部使用KurentoClient来控制KMS.
 
-It is highly recommended to run this test in an Ubuntu 14.04 machine. This is due the fact the test uses native Linux utilities. Therefore, this application must be installed in the machine running the test:
+强烈建议您在Ubuntu 14.04机器上运行此测试。 这是由于测试使用本机Linux实用程序。 
 
-- Google Chrome (latest stable version). In Ubuntu, it can be done with the command line as follows:
+在运行测试的机器中，我们必须安装以下依赖:
+
+- Google Chrome (latest stable version). 在Ubuntu中，可以使用如下命令进行操作:
 
 ```bash
 sudo apt-get install libxss1 libappindicator1 libindicator7
@@ -80,77 +79,71 @@ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome*.deb
 sudo apt-get install -f
 ```
-- [Tesseract-ocr]. Utility for OCR. This tool is mandatory to carry out the end-to-end (browser to browser) latency calculation. It can be installed in Ubuntu with the following command:
+
+设置 Google Chrome 为--no-sandbox
+
+```
+cd /opt/google/chrome/
+vim google-chrome
+```
+修改 ``` exec -a "$0" "$HERE/chrome"  "$@" ``` 为 ``` exec -a "$0" "$HERE/chrome"  "$@" --no-sandbox ```
+
+
+- [Tesseract-ocr]. Utility for OCR. 此工具执行端到端（浏览器到浏览器）延迟计算。 它可以通过以下命令安装在Ubuntu中:
 
 ```bash
 sudo apt-get install tesseract-ocr
 sudo mkdir -p /bytedeco/javacpp-presets/tesseract/cppbuild/linux-x86_64/share/tessdata/
 sudo ln -s /usr/share/tesseract-ocr/tessdata/eng.traineddata /bytedeco/javacpp-presets/tesseract/cppbuild/linux-x86_64/share/tessdata/eng.traineddata
 ```
-- [qpsnr]. Utility to calculate video quality (SSIM/PSNR). This tool is mandatory to carry out the video quality evaluation (i.e., if the flag video.quality.ssim or video.quality.psnr are set to true). In order to install it in Ubuntu, the latest version of the deb package should be downloaded from the qpsnr web, and the install it with the Debian package manager:
+
+- [qpsnr]. 计算视频质量（SSIM/PSNR）的实用程序。 该工具执行视频质量评估（即，如果标志video.quality.ssim或video.quality.psnr被设置为真）。 为了将其安装在Ubuntu中，最新版本的deb软件包应该从qpsnr web下载，并且安装 dpkg 包管理器:
 
 ```bash
+wget http://qpsnr.youlink.org/data/qpsnr_0.2.5_amd64.deb
 sudo dpkg -i qpsnr_0.2.5_amd64.deb
 ```
-This test is able to gather some of the physical parameter values of the machine hosting the KMS. This component is called **monitor**. In order to enable this feature, as described in table before, the key configuration `monitor.kms` should be set to `true`. The parameters red by the monitor are the following:
+
+- Xvfb (选择安装). 一个虚拟的X服务器环境, 没有提供GUI的服务器需要安装。
+
+```
+sudo apt-get install xvfb
+Xvfb :40 -screen 0 1024x768x24 -extension RANDR
+```
+
+该测试能够收集托管KMS的机器的一些物理参数值。 这个组件叫做**monitor**。 为了启用此功能，如上表所述，配置“monitor.kms”为“true”。 monitor主要的参数如下：
 
 - CPU consumption (%)
 - RAM memory consumption (bytes and %)
 - KMS threads number
 - Network interfaces (up and down) usage
 
-The monitor component has two important requirements:
+monitor组件有两个重要的要求：:
 
-- It has been created in Java, and therefore, the machine hosting the KMS under test should have installed JRE
-- The test opens a TCP socket with the component using the port 12345. Therefore, this port should be open the machine hosting the KMS
+- 它已经在Java中创建，因此，正在测试的 KMS 的机器应该已经安装了 JRE
+- 该测试使用端口12345打开组件的TCP套接字。因此，该端口应该打开
 
-When the test finishes, a set of CSV files will be created by the test. A CSV file is a comma separated values file, and it can be opened using a spreadsheet processor, for instance Microsoft Excel or LibreOffice Calc. It is important to be aware of the content of this file. The constraints are the following:
+测试完成后，将通过测试创建一组CSV文件。 CSV文件是逗号分隔值文件，可以使用电子表格处理器（例如Microsoft Excel或LibreOffice Calc）打开它。 了解该文件的内容很重要。 约束如下:
 
-- Each column is a set of values of a given feature
-- Each row is an instant sample of the corresponding feature (column)
-- Each sample (i.e. each row) is taken each second
+- 每列是给定特征的一组值
+- 每行是对应特征（列）的即时样本
+- 每个样品（即每一行）每秒钟被取出
 
-There will be two kinds of CSV files:
+将有两种CSV文件:
 
-1. CSV for latency and WebRTC statistics. These files follows the following pattern following: \<NubomediaBenchmarkTest-latency-sessionX\>, where X is the number of session. For the default case, i.e. only 1 session (sessions.number=1), the resulting CSV file will be NubomediaBenchmarkTest-latency-session0.csv. 
-2. CSV for physical parameters (gathered by monitor). These files follows the following pattern following: \<NubomediaBenchmarkTest-monitor-sessionX\>, where X is the number of session.
+1. WebRTC延迟统计CSV文件. 这些文件遵循以下模式：\ <NubomediaBenchmarkTest-latency-sessionX \>，其中X是会话数。 对于默认情况，即只有1个会话（sessions.number = 1），生成的CSV文件将是NubomediaBenchmarkTest-latency-session0.csv. 
+2. 物理参数 (通过monitor收集)文件CSV. 这些文件遵循以下模式: \<NubomediaBenchmarkTest-monitor-sessionX\>,其中X是会话数.
 
-The format of the columns in the first type of CSV (latency) are the following (see an example snapshot in the picture below):
+第一种类型的CSV（延迟）中的列的格式如下（请参见下图中的示例快照）：
+- First column (mandatory). Header name: E2ELatencyMs. 这组数据是以毫秒为单位的端到端延迟（即浏览器到浏览器）
+- Second column (optional). Header name: avg_ssim. 视频质量度量的相似度。 当视频质量完美时，该度量的值为1，在最坏情况下为0.
+- Third column (optional). Header name: avg_psnr. 视频质量度量（dB）的峰值。 可接受的质量损失值被认为是大约20 dB到25 dB.
+- Next columns (mandatory). WebRTC stats. 每个列名称具有相同的模式: \<local|remote\>\<Audio|Video\>\<statName\>. 因此，我们可以在每一列中看到三个不同的部分:
+	- \<local|remote\>. 如果统计数据从本地开始，这意味着度量标准在演示方。 如果该统计信息从远程开始，这意味着度量标准已经在主持人方.
+	- \<Audio|Video\>. 此值区分音频和视频的度量.
+	- \<statName\>. 最后一部分是WebRTC度量名称，例如 googEchoCancellationReturnLoss，JitterBufferMs，packetsLost等等。 这个WebRTC统计的完整列表是官方标准。 有关每个度量的更多信息，以及每个测量的单位，请参阅文档（https://www.w3.org/TR/webrtc-stats/）.
 
-- First column (mandatory). Header name: E2ELatencyMs. This set of data is the end-to-end latency (i.e. browser to browser) in milliseconds
-- Second column (optional). Header name: avg_ssim. Results for the structural similarity video quality metric. The value of this metric is 1 when the video quality is perfect, to 0 in the worst case.
-- Third column (optional). Header name: avg_psnr. Results for the peak signal to noise relation video quality metric in dB. Acceptable values for quality loss are considered to be about 20 dB to 25 dB.
-- Next columns (mandatory). WebRTC stats. Each column name has the same pattern: \<local|remote\>\<Audio|Video\>\<statName\>. Therefore, we can read three different parts in each column:
-	- \<local|remote\>. If the stat start with local that means that the metric has taken in presenter side. If the stat start with remote that means that the metric has taken in presenter side.
-	- \<Audio|Video\>. This value distinguish metrics for Audio and Video.
-	- \<statName\>. The final part of the column is the WebRTC metric name, e.g. googEchoCancellationReturnLoss, JitterBufferMs, packetsLost, among many others. The complete list of this WebRTC stats is the official standard. See the documentation (https://www.w3.org/TR/webrtc-stats/) for further information on each metric, and also the unit of each measurement.
+由于使用不同机制（即客户端WebRTC统计信息，KMS内部延迟，端到端延迟，视频质量）收集度量的事实，边界值很可能不一致。 换句话说，为了正确处理收集的数据，可能会丢弃边缘值（第一行和最后一行）.
 
-Due to the fact the metrics are gathered using different mechanisms (i.e. client WebRTC stats, KMS internal latencies, end-to-end latency, video quality) it is very likely that the boundary values are not consistent. In other words, in order to process correctly the gathered data, the edge values (first and lasts rows) might be discarded.
-
-News
-----
-
-Follow us on Twitter @[CodeUrjc Twitter].
-
-Licensing and distribution
---------------------------
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-
-[Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
-[CodeUrjc Logo]: https://raw.githubusercontent.com/codeurjc/webrtc-benchmark/master/src/main/resources/static/img/code.png
-[CodeUrjc Twitter]: https://twitter.com/codeurjc
-[CodeUrjc]: http://www.code.etsii.urjc.es/
 [Tesseract-ocr]: https://github.com/tesseract-ocr
 [qpsnr]: http://qpsnr.youlink.org/
