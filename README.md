@@ -108,7 +108,8 @@ sudo dpkg -i qpsnr_0.2.5_amd64.deb
 
 ```
 sudo apt-get install xvfb
-Xvfb :40 -screen 0 1024x768x24 -extension RANDR
+Xvfb :40 -screen 0 1024x768x24 -extension RANDR &
+export DISPLAY=:40
 ```
 
 该测试能够收集托管KMS的机器的一些物理参数值。 这个组件叫做**monitor**。 为了启用此功能，如上表所述，配置“monitor.kms”为“true”。 monitor主要的参数如下：
