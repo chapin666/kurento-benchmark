@@ -1,8 +1,9 @@
-[中文版文档](README-ZH.md)
 
 [![][CodeUrjc Logo]][CodeUrjc]
 
 Copyright © 2017 [CodeUrjc]. Licensed under [Apache 2.0 License].
+
+查看 [中文版文档](README-ZH.md)
 
 webrtc-benchmark
 ================
