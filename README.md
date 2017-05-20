@@ -1,3 +1,5 @@
+[中文版文档](README-ZH.md)
+
 [![][CodeUrjc Logo]][CodeUrjc]
 
 Copyright © 2017 [CodeUrjc]. Licensed under [Apache 2.0 License].
@@ -58,9 +60,9 @@ In addition to the application itself, the webrtc-benchmark repository is shippe
 | webrtc.endpoint.kbps        | 500                          | Bandwidth (in kbps) to configure the WebRtcEndpoints elements handled by the app                                                                                                                                        |
 | monitor.kms                 | false                        | Boolean flag that indicates whether or not a resources monitor for the machine hosting KMS is used                                                                                                                      |
 | monitor.sampling.rate       | 1000                         | Rate for the monitor in milliseconds                                                                                                                                                                                    |
-| test.node.login             | -                            | If kms.ws.uri points to a KMS hosted in remote machine (i.e. not 127.0.0.1) the test connects to SSH to that host to assess some physical parameters (CPU, memory, etc). In this case, SSH credentials are needed       |
-| test.node.passwd            | -                            | In order to set the KMS SSH credentials, test.node.login and password (or pem key) should be honored. This parameter set the SSH password                                                                               |
-| test.node.pem               | -                            | In order to set the KMS SSH credentials, test.node.login and password (or pem key) should be honored. This parameter set the path of the PEM key file                                                                   |
+| kms.login             | -                            | If kms.ws.uri points to a KMS hosted in remote machine (i.e. not 127.0.0.1) the test connects to SSH to that host to assess some physical parameters (CPU, memory, etc). In this case, SSH credentials are needed       |
+| kms.passwd            | -                            | In order to set the KMS SSH credentials, test.node.login and password (or pem key) should be honored. This parameter set the SSH password                                                                               |
+| kms.pem               | -                            | In order to set the KMS SSH credentials, test.node.login and password (or pem key) should be honored. This parameter set the path of the PEM key file                                                                   |
 
 The test can be executed from the command line. To do that, first of all this repository should be cloned from GitHub, and the it can be executed as follows:
 
