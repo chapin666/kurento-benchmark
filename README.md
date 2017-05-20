@@ -132,7 +132,7 @@ monitor组件有两个重要的要求：:
 
 将有两种CSV文件:
 
-1. WebRTC延迟统计CSV文件. 这些文件遵循以下模式：\ <NubomediaBenchmarkTest-latency-sessionX \>，其中X是会话数。 对于默认情况，即只有1个会话（sessions.number = 1），生成的CSV文件将是NubomediaBenchmarkTest-latency-session0.csv. 
+1. WebRTC延迟统计CSV文件. 这些文件遵循以下模式：\<NubomediaBenchmarkTest-latency-sessionX \>，其中X是会话数。 对于默认情况，即只有1个会话（sessions.number = 1），生成的CSV文件将是NubomediaBenchmarkTest-latency-session0.csv. 
 2. 物理参数 (通过monitor收集)文件CSV. 这些文件遵循以下模式: \<NubomediaBenchmarkTest-monitor-sessionX\>,其中X是会话数.
 
 第一种类型的CSV（延迟）中的列的格式如下（请参见下图中的示例快照）：
