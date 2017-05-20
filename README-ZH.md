@@ -146,5 +146,20 @@ monitor组件有两个重要的要求：:
 
 由于使用不同机制（即客户端WebRTC统计信息，KMS内部延迟，端到端延迟，视频质量）收集度量的事实，边界值很可能不一致。 换句话说，为了正确处理收集的数据，可能会丢弃边缘值（第一行和最后一行）.
 
+Licensing and distribution
+--------------------------
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
 [Tesseract-ocr]: https://github.com/tesseract-ocr
 [qpsnr]: http://qpsnr.youlink.org/
